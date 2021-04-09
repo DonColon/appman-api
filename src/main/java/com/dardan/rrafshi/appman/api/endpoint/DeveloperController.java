@@ -1,6 +1,7 @@
-package com.dardan.rrafshi.appman.api.endpoint.parameter;
+package com.dardan.rrafshi.appman.api.endpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dardan.rrafshi.appman.api.AppmanException;
+import com.dardan.rrafshi.appman.api.endpoint.parameter.Paging;
 import com.dardan.rrafshi.appman.api.repository.DeveloperRepository;
 import com.dardan.rrafshi.appman.api.repository.model.Developer;
 
@@ -25,13 +27,13 @@ public final class DeveloperController
 
 	@PostMapping("/developers")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Developer createUser(@RequestBody final Developer body)
+	public Developer createDeveloper(@RequestBody final Developer body)
 	{
 		return this.developerRepository.save(body);
 	}
 
 	@GetMapping("/developers/{id}")
-	public Developer retrieveUser(@PathVariable("id") final int developerID)
+	public Developer retrieveDeveloper(@PathVariable("id") final int developerID)
 	{
 		final var entity = this.developerRepository.findById(developerID);
 
@@ -43,7 +45,7 @@ public final class DeveloperController
 
 	@PutMapping("/developers/{id}")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Developer updateUser(@PathVariable("id") final int developerID, @RequestBody final Developer body)
+	public Developer updateDeveloper(@PathVariable("id") final int developerID, @RequestBody final Developer body)
 	{
 		final var entity = this.developerRepository.findById(developerID);
 
@@ -58,11 +60,18 @@ public final class DeveloperController
 
 	@DeleteMapping("/developers/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void deleteUser(@PathVariable("id") final int developerID)
+	public void deleteDeveloper(@PathVariable("id") final int developerID)
 	{
 		if (!this.developerRepository.existsById(developerID))
 			throw new AppmanException.NotFound("The user with the ID '" + developerID + "' does not exist");
 
 		this.developerRepository.deleteById(developerID);
+	}
+
+	@GetMapping("/developers")
+	public Page<Developer> listDevelopers(final Paging paging)
+	{
+		final var pageRequest = paging.toPageRequest();
+		return this.developerRepository.findAll(pageRequest);
 	}
 }

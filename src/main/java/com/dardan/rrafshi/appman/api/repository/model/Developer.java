@@ -25,14 +25,28 @@ public class Developer implements Serializable
 
 	private String firstName;
 	private String familyName;
-	private String userName;
 	private LocalDate birthday;
+
+	private String userName;
 	private String email;
 	private String password;
+
 	private String phoneNumber;
 	private String mobileNumber;
 	private LocalDateTime createdOn;
 
+
+	public void update(final Developer other)
+	{
+		this.firstName = other.firstName;
+		this.familyName = other.familyName;
+		this.userName = other.userName;
+		this.birthday = other.birthday;
+		this.email = other.email;
+		this.password = other.password;
+		this.phoneNumber = other.phoneNumber;
+		this.mobileNumber = other.mobileNumber;
+	}
 
 	@Override
 	public boolean equals(final Object object)
@@ -53,18 +67,6 @@ public class Developer implements Serializable
 	public int hashCode()
 	{
 		return Objects.hash(this.developerID);
-	}
-
-	public void update(final Developer other)
-	{
-		this.firstName = other.firstName;
-		this.familyName = other.familyName;
-		this.userName = other.userName;
-		this.birthday = other.birthday;
-		this.email = other.email;
-		this.password = other.password;
-		this.phoneNumber = other.phoneNumber;
-		this.mobileNumber = other.mobileNumber;
 	}
 
 
