@@ -6,7 +6,9 @@ import { MetadataModule } from "./metadata/metadata.module";
 
 @Module({
 	imports: [
-		ConfigModule.forRoot(),
+		ConfigModule.forRoot({
+			isGlobal: true
+		}),
 		DatabaseModule,
 		MetadataModule,
 	]

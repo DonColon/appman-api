@@ -1,0 +1,63 @@
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Inject } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DataSource } from 'typeorm';
+import { Request } from "express";
+import { PaginateOptions } from './page.dto';
+
+
+@Injectable()
+export class PaginateInterceptor implements NestInterceptor
+{
+    @InjectDataSource()
+    private dataSource: DataSource;
+
+    @Inject()
+    private reflector: Reflector;
+
+
+    public async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>>
+    {
+        const request = context.switchToHttp().getRequest() as Request;
+        const { page, pageSize, sortBy, sortOrder } = PaginateOptions.of(request);
+
+        const returnType = this.reflector.get("returnType", context.getHandler());
+        const repository = this.dataSource.getRepository(returnType);
+
+        const totalItems = await repository.count();
+        const totalPages = Math.ceil(totalItems / pageSize);
+
+        const originalUrl = (request.originalUrl)
+            ? new URL(request.protocol + '://' + request.get('host') + request.originalUrl)
+            : new URL(request.protocol + '://' + request.hostname + request.url);
+        
+        return next.handle().pipe(map(data => (
+            {
+                meta: {
+                    pageSize: pageSize,
+                    page: page,
+                    totalItems: totalItems,
+                    totalPages: totalPages,
+                    sortBy: sortBy,
+                    sortOrder: sortOrder
+                },
+                links: {
+                    first: page === 1 ? undefined : this.buildLink(originalUrl, 1),
+                    previous: page - 1 < 1 ? undefined : this.buildLink(originalUrl, page - 1),
+                    current: this.buildLink(originalUrl, page),
+                    next: page + 1 > totalPages ? undefined : this.buildLink(originalUrl, page + 1),
+                    last: page === totalPages ? undefined : this.buildLink(originalUrl, totalPages)
+                },
+                items: data
+            }
+        )));
+    }
+
+    private buildLink(url: URL, page: number): string
+    {
+        url.searchParams.set("page", page.toString());
+        return url.href;
+    }
+}
