@@ -2,7 +2,15 @@ import { Request } from "express";
 import { FindManyOptions } from "typeorm";
 
 
-export class PaginateOptions
+interface PageParameters
+{
+    page: number,
+    pageSize: number,
+    sortBy: string,
+    sortOrder: string
+}
+
+export class PageOptions
 {
     page: number;
     pageSize: number;
@@ -10,16 +18,16 @@ export class PaginateOptions
     sortOrder: string;
 
 
-    private constructor(page: number, pageSize: number, sortBy: string, sortOrder: string)
+    private constructor(parameters: PageParameters)
     {
-        this.page = page;
-        this.pageSize = pageSize;
-        this.sortBy = sortBy;
-        this.sortOrder = sortOrder;
+        this.page = parameters.page;
+        this.pageSize = parameters.pageSize;
+        this.sortBy = parameters.sortBy;
+        this.sortOrder = parameters.sortOrder;
     }
 
 
-    static of(request: Request): PaginateOptions
+    static of(request: Request): PageOptions
     {
         const { query } = request;
 
@@ -29,7 +37,7 @@ export class PaginateOptions
         const sortBy = query.sortBy as string || "id";
         const sortOrder = query.sortOrder as string || "ASC";
     
-        return new PaginateOptions(page, pageSize, sortBy, sortOrder);
+        return new PageOptions({ page, pageSize, sortBy, sortOrder });
     }
 
     toQuery(): FindManyOptions

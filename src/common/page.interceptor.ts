@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSource } from 'typeorm';
 import { Request } from "express";
-import { PaginateOptions } from './page.dto';
+import { PageOptions } from './page.dto';
 
 
 @Injectable()
-export class PaginateInterceptor implements NestInterceptor
+export class PageInterceptor implements NestInterceptor
 {
     @InjectDataSource()
     private dataSource: DataSource;
@@ -21,7 +21,7 @@ export class PaginateInterceptor implements NestInterceptor
     public async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>>
     {
         const request = context.switchToHttp().getRequest() as Request;
-        const { page, pageSize, sortBy, sortOrder } = PaginateOptions.of(request);
+        const { page, pageSize, sortBy, sortOrder } = PageOptions.of(request);
 
         const returnType = this.reflector.get("returnType", context.getHandler());
         const repository = this.dataSource.getRepository(returnType);

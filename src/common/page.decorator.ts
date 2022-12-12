@@ -1,19 +1,19 @@
 import { createParamDecorator, applyDecorators, ExecutionContext, UseInterceptors, SetMetadata } from "@nestjs/common";
-import { PaginateInterceptor } from "./paginate.interceptor";
 import { ObjectLiteral, EntityTarget } from "typeorm";
 import { Request } from "express";
-import { PaginateOptions } from "./page.dto";
+import { PageInterceptor } from "./page.interceptor";
+import { PageOptions } from "./page.dto";
 
 
 export function Paginated(returnType: EntityTarget<ObjectLiteral>)
 {
     return applyDecorators(
         SetMetadata("returnType", returnType),
-        UseInterceptors(PaginateInterceptor)
+        UseInterceptors(PageInterceptor)
     );
 }
 
-export const PaginateQuery = createParamDecorator((data: unknown, context: ExecutionContext): PaginateOptions => {
+export const PageQuery = createParamDecorator((data: unknown, context: ExecutionContext): PageOptions => {
     const request = context.switchToHttp().getRequest() as Request;
-    return PaginateOptions.of(request);
+    return PageOptions.of(request);
 });

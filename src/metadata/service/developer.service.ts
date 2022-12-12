@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginateOptions } from "src/common/page.dto";
+import { PageOptions } from "src/common/page.dto";
 import { Repository } from 'typeorm';
 import { Developer } from "../entity/developer.entity";
 
@@ -34,7 +34,7 @@ export class DeveloperService
         this.developerRepository.delete({ developerID: id });
     }
 
-    listAll(options: PaginateOptions): Promise<Developer[]>
+    listAll(options: PageOptions): Promise<Developer[]>
     {
         return this.developerRepository.find(options.toQuery());
     }

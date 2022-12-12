@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, Post, Body, Param, Put, Delete, UseInterceptors, SetMetadata } from "@nestjs/common";
-import { PaginateOptions } from "src/common/page.dto";
-import { Paginated, PaginateQuery } from "src/common/paginate.decorator";
+import { PageOptions } from "src/common/page.dto";
+import { Paginated, PageQuery } from "src/common/page.decorator";
 import { Developer } from "../entity/developer.entity";
 import { DeveloperService } from "../service/developer.service";
 
@@ -38,7 +38,7 @@ export class DeveloperController
 
     @Get()
     @Paginated(Developer)
-    listAll(@PaginateQuery() options: PaginateOptions): Promise<Developer[]>
+    listAll(@PageQuery() options: PageOptions): Promise<Developer[]>
     {
         return this.developerService.listAll(options);
     }
