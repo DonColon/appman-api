@@ -12,6 +12,7 @@ import { DeveloperService } from "./service/developer.service";
         ])
     ],
 	controllers: [DeveloperController],
-	providers: [DeveloperService]
+	providers: [DeveloperService],
+    exports: [DeveloperService]
 })
 export class MetadataModule {}

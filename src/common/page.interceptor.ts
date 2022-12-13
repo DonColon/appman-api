@@ -21,17 +21,15 @@ export class PageInterceptor implements NestInterceptor
     public async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>>
     {
         const request = context.switchToHttp().getRequest() as Request;
-        const { page, pageSize, sortBy, sortOrder } = PageOptions.of(request);
 
         const returnType = this.reflector.get("returnType", context.getHandler());
         const repository = this.dataSource.getRepository(returnType);
 
+        const { page, pageSize, sortBy, sortOrder } = PageOptions.of(request);
+
         const totalItems = await repository.count();
         const totalPages = Math.ceil(totalItems / pageSize);
-
-        const originalUrl = (request.originalUrl)
-            ? new URL(request.protocol + '://' + request.get('host') + request.originalUrl)
-            : new URL(request.protocol + '://' + request.hostname + request.url);
+        const originalUrl = this.buildUrl(request); 
         
         return next.handle().pipe(map(data => (
             {
@@ -53,6 +51,15 @@ export class PageInterceptor implements NestInterceptor
                 items: data
             }
         )));
+    }
+
+    private buildUrl(request: Request): URL
+    {
+        const originalUrl = (request.originalUrl)
+            ? request.protocol + '://' + request.get('host') + request.originalUrl
+            : request.protocol + '://' + request.hostname + request.url;
+
+        return new URL(originalUrl);
     }
 
     private buildLink(url: URL, page: number): string

@@ -24,6 +24,20 @@ export class DeveloperService
         });
     }
 
+    retrieveByUserName(userName: string): Promise<Developer>
+    {
+        return this.developerRepository.findOneBy({
+            userName: userName
+        });
+    }
+
+    retrieveByEmail(email: string): Promise<Developer>
+    {
+        return this.developerRepository.findOneBy({
+            email: email
+        });
+    }
+
     update(id: number, developer: Developer)
     {
         this.developerRepository.update({ developerID: id }, developer);
