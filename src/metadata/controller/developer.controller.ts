@@ -3,6 +3,7 @@ import { PageOptions } from "src/common/page.dto";
 import { Paginated, PageQuery } from "src/common/page.decorator";
 import { Developer } from "../entity/developer.entity";
 import { DeveloperService } from "../service/developer.service";
+import { AccessTokenAuth } from "src/auth/auth.decorator";
 
 
 @Controller("developers")
@@ -27,6 +28,7 @@ export class DeveloperController
 
     @Put(":id")
     @HttpCode(201)
+    @AccessTokenAuth()
     update(@Param("id") id: number, @Body() body: Developer)
     {
         this.developerService.update(id, body);
@@ -34,6 +36,7 @@ export class DeveloperController
 
     @Delete(":id")
     @HttpCode(204)
+    @AccessTokenAuth()
     delete(@Param("id") id: number)
     {
         this.developerService.delete(id);
