@@ -20,7 +20,7 @@ export class DeveloperService
     public retrieve(id: number): Promise<Developer>
     {
         return this.developerRepository.findOneBy({
-            developerID: id
+            id: id
         });
     }
 
@@ -40,12 +40,12 @@ export class DeveloperService
 
     public update(id: number, developer: Developer)
     {
-        this.developerRepository.update({ developerID: id }, developer);
+        this.developerRepository.update({ id: id }, developer);
     }
 
     public delete(id: number)
     {
-        this.developerRepository.delete({ developerID: id });
+        this.developerRepository.delete({ id: id });
     }
 
     public listAll(options: PageOptions): Promise<Developer[]>

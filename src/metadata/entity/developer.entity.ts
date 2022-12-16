@@ -4,8 +4,8 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeor
 @Entity()
 export class Developer
 {
-    @PrimaryGeneratedColumn()
-    developerID: number;
+    @PrimaryGeneratedColumn({ name: "developerID" })
+    id: number;
 
     @Column()
     firstName: string;
