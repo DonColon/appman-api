@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageOptions } from "src/common/page.dto";
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Developer } from "../entity/developer.entity";
 
 
@@ -38,7 +38,7 @@ export class DeveloperService
         });
     }
 
-    public update(id: number, developer: Developer)
+    public update(id: number, developer: DeepPartial<Developer>)
     {
         this.developerRepository.update({ id: id }, developer);
     }

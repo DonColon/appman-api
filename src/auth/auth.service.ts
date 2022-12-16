@@ -1,4 +1,4 @@
-import { UnauthorizedException, Inject, Injectable } from "@nestjs/common";
+import { UnauthorizedException, Inject, Injectable, ForbiddenException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { DeveloperService } from "src/metadata/service/developer.service";
@@ -34,10 +34,7 @@ export class AuthService
 
     public async signIn(user: User): Promise<AuthToken>
     {
-        const payload = {
-            sub: user.id,
-            username: user.userName
-        };
+        const payload = { sub: user.id, username: user.userName };
 
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload, {
@@ -50,9 +47,32 @@ export class AuthService
             })
         ]);
 
-        return {
-            accessToken,
-            refreshToken
-        };
+        this.developerService.update(user.id, {
+            refreshToken: refreshToken
+        });
+
+        return { accessToken, refreshToken };
+    }
+
+    public async refresh(id: number, refreshToken: string): Promise<AuthToken>
+    {
+        const user = await this.developerService.retrieve(id);
+
+        if(!user || !user.refreshToken) {
+            throw new ForbiddenException();
+        }
+        
+        if(user.refreshToken !== refreshToken) {
+            throw new ForbiddenException();
+        }
+
+        return this.signIn(user);
+    }
+
+    public signOut(id: number)
+    {
+        this.developerService.update(id, {
+            refreshToken: null
+        });
     }
 }

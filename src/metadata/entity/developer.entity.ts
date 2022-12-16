@@ -33,4 +33,7 @@ export class Developer
 
     @CreateDateColumn()
     createdOn: Date;
+
+    @Column()
+    refreshToken: string;
 }
