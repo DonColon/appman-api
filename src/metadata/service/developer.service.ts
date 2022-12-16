@@ -12,43 +12,43 @@ export class DeveloperService
     private developerRepository: Repository<Developer>;
 
 
-    create(developer: Developer): Promise<Developer>
+    public create(developer: Developer): Promise<Developer>
     {
         return this.developerRepository.save(developer);
     }
 
-    retrieve(id: number): Promise<Developer>
+    public retrieve(id: number): Promise<Developer>
     {
         return this.developerRepository.findOneBy({
             developerID: id
         });
     }
 
-    retrieveByUserName(userName: string): Promise<Developer>
+    public retrieveByUserName(userName: string): Promise<Developer>
     {
         return this.developerRepository.findOneBy({
             userName: userName
         });
     }
 
-    retrieveByEmail(email: string): Promise<Developer>
+    public retrieveByEmail(email: string): Promise<Developer>
     {
         return this.developerRepository.findOneBy({
             email: email
         });
     }
 
-    update(id: number, developer: Developer)
+    public update(id: number, developer: Developer)
     {
         this.developerRepository.update({ developerID: id }, developer);
     }
 
-    delete(id: number)
+    public delete(id: number)
     {
         this.developerRepository.delete({ developerID: id });
     }
 
-    listAll(options: PageOptions): Promise<Developer[]>
+    public listAll(options: PageOptions): Promise<Developer[]>
     {
         return this.developerRepository.find(options.toQuery());
     }

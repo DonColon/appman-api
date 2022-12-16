@@ -27,7 +27,7 @@ export class PageOptions
     }
 
 
-    static of(request: Request): PageOptions
+    public static of(request: Request): PageOptions
     {
         const { query } = request;
 
@@ -40,7 +40,7 @@ export class PageOptions
         return new PageOptions({ page, pageSize, sortBy, sortOrder });
     }
 
-    toQuery(): FindManyOptions
+    public toQuery(): FindManyOptions
     {
         return {
             take: this.pageSize,

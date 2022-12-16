@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Post, Body, Param, Put, Delete } from "@nestjs/common";
+import { Controller, Get, Inject, Post, Body, Param, Put, Delete, HttpCode, HttpException, BadRequestException } from "@nestjs/common";
 import { PageOptions } from "src/common/page.dto";
 import { Paginated, PageQuery } from "src/common/page.decorator";
 import { Developer } from "../entity/developer.entity";
@@ -13,6 +13,7 @@ export class DeveloperController
 
 
     @Post()
+    @HttpCode(201)
     create(@Body() body: Developer): Promise<Developer>
     {
         return this.developerService.create(body);
@@ -25,12 +26,14 @@ export class DeveloperController
     }
 
     @Put(":id")
+    @HttpCode(201)
     update(@Param("id") id: number, @Body() body: Developer)
     {
         this.developerService.update(id, body);
     }
 
     @Delete(":id")
+    @HttpCode(204)
     delete(@Param("id") id: number)
     {
         this.developerService.delete(id);
