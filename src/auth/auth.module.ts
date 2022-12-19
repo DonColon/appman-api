@@ -15,9 +15,9 @@ import { RefreshTokenStrategy } from "./strategy/refresh-token.strategy";
     ],
     providers: [
         AuthService,
-        AccessTokenStrategy,
+        LocalStrategy,
         RefreshTokenStrategy,
-        LocalStrategy
+        AccessTokenStrategy
     ],
     controllers: [AuthController]
 })
