@@ -20,11 +20,12 @@ export class TraceMiddleware implements NestMiddleware
     private generateTraceID(): string
     {
         const ip = this.currentIP();
+        const octets = ip.split(".");
 
-        let hexCode = "";
-        for(const octet of ip.split(".").map(Number)) {
-            hexCode += octet.toString(16).padStart(2, "0");
-        }
+        const hexCode = octets.map(
+            (value) => parseInt(value).toString(16).padStart(2, "0")
+        )
+        .join("");
 
         this.sequence++;
         if(this.sequence > 9000) this.sequence = 999;
@@ -43,5 +44,7 @@ export class TraceMiddleware implements NestMiddleware
                 }
             }
         }
+
+        return "127.0.0.1";
     }
 }
