@@ -6,39 +6,40 @@ import { networkInterfaces } from "os";
 @Injectable()
 export class TraceMiddleware implements NestMiddleware
 {
-    private sequence: number = 999;
+    private traceSequence: number = 999;
 
 
     public use(request: Request, response: Response, next: NextFunction)
     {        
-        const traceID = this.generateTraceID();
-        request.headers["x-trace-id"] = traceID;
-
+        request.headers["x-trace-id"] = this.generateTraceID();
         next();
     }
 
     private generateTraceID(): string
     {
-        const ip = this.currentIP();
+        const hexCode = this.generateHexCode();
+        const sequence = this.generateSequence();
+
+        return hexCode + Date.now() + sequence + process.pid;
+    }
+
+    private generateHexCode(): string
+    {
+        const ip = this.findCurrentIP();
         const octets = ip.split(".");
 
-        const hexCode = octets.map(
+        return octets.map(
             (value) => parseInt(value).toString(16).padStart(2, "0")
         )
         .join("");
-
-        this.sequence++;
-        if(this.sequence > 9000) this.sequence = 999;
-
-        return hexCode + Date.now() + this.sequence + process.pid;
     }
 
-    private currentIP(): string
+    private findCurrentIP(): string
     {
         const interfaces = networkInterfaces();
 
-        for(const interfaceName in interfaces) {
-            for(const network of interfaces[interfaceName]) {
+        for(const name in interfaces) {
+            for(const network of interfaces[name]) {
                 if(network.family === "IPv4" && !network.internal) {
                     return network.address;
                 }
@@ -46,5 +47,16 @@ export class TraceMiddleware implements NestMiddleware
         }
 
         return "127.0.0.1";
+    }
+
+    private generateSequence(): number
+    {
+        this.traceSequence++;
+
+        if(this.traceSequence > 9000) {
+            this.traceSequence = 999;
+        }
+
+        return this.traceSequence;
     }
 }
