@@ -10,8 +10,9 @@ export class TraceMiddleware implements NestMiddleware
 
 
     public use(request: Request, response: Response, next: NextFunction)
-    {        
-        request.headers["x-trace-id"] = this.generateTraceID();
+    {
+        const traceID = this.generateTraceID();
+        request.headers["x-trace-id"] = traceID;
         next();
     }
 
@@ -51,11 +52,11 @@ export class TraceMiddleware implements NestMiddleware
 
     private generateSequence(): number
     {
-        this.traceSequence++;
-
         if(this.traceSequence > 9000) {
             this.traceSequence = 999;
         }
+        
+        this.traceSequence++;
 
         return this.traceSequence;
     }

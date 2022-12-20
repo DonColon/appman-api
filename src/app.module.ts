@@ -1,8 +1,7 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from "./auth/auth.module";
-import { AppExceptionFilter } from "./common/app.filter";
-import { TraceMiddleware } from "./common/trace.middleware";
+import { CommonModule } from "./common/common.module";
 import { DatabaseModule } from "./database.module";
 import { MetadataModule } from "./metadata/metadata.module";
 
@@ -15,16 +14,6 @@ import { MetadataModule } from "./metadata/metadata.module";
 		DatabaseModule,
 		AuthModule,
 		MetadataModule,
-	],
-	providers: [{ 
-		provide: "APP_FILTER", 
-		useClass: AppExceptionFilter 
-	}]
+	]
 })
-export class AppModule implements NestModule
-{
-	configure(consumer: MiddlewareConsumer)
-	{
-		consumer.apply(TraceMiddleware).forRoutes("*");
-	}
-}
+export class AppModule extends CommonModule {}

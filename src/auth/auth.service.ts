@@ -3,8 +3,8 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { DeveloperService } from "src/metadata/service/developer.service";
 import { Credential } from "./dto/credential.dto";
-import { AuthToken } from "./dto/token.dto";
-import { User } from "./dto/user.dto";
+import { AuthToken } from "./dto/auth-token.dto";
+import { AuthUser } from "./dto/auth-user.dto";
 
 
 @Injectable()
@@ -20,7 +20,7 @@ export class AuthService
     private configService: ConfigService;
 
 
-    public async validateUser(credential: Credential): Promise<User>
+    public async validateUser(credential: Credential): Promise<AuthUser>
     {
         const user = await this.developerService.retrieveByUserName(credential.userName);
 
@@ -32,18 +32,18 @@ export class AuthService
         return result;
     }
 
-    public async signIn(user: User): Promise<AuthToken>
+    public async signIn(user: AuthUser): Promise<AuthToken>
     {
         const payload = { sub: user.id, username: user.userName };
 
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync(payload, {
-                secret: this.configService.get<string>("JWT_ACCESS_SECRET"),
-                expiresIn: this.configService.get<string>("JWT_ACCESS_EXPIRES_IN")
+                secret: this.configService.get("JWT_ACCESS_SECRET") as string,
+                expiresIn: this.configService.get("JWT_ACCESS_EXPIRES_IN") as string
             }),
             this.jwtService.signAsync(payload, {
-                secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
-                expiresIn: this.configService.get<string>("JWT_REFRESH_EXPIRES_IN")
+                secret: this.configService.get("JWT_REFRESH_SECRET") as string,
+                expiresIn: this.configService.get("JWT_REFRESH_EXPIRES_IN") as string
             })
         ]);
 

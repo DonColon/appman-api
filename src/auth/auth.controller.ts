@@ -2,7 +2,7 @@ import { Controller, Delete, Get, Inject, Post, Req } from "@nestjs/common";
 import { Request } from "express";
 import { AccessTokenAuth, LocalAuth, RefreshTokenAuth } from "./auth.decorator";
 import { AuthService } from "./auth.service";
-import { User } from "./dto/user.dto";
+import { AuthUser } from "./dto/auth-user.dto";
 
 
 @Controller("auth")
@@ -16,7 +16,7 @@ export class AuthController
     @LocalAuth()
     public signIn(@Req() request: Request)
     {
-        return this.authService.signIn(request.user as User);
+        return this.authService.signIn(request.user as AuthUser);
     }
 
     @Get("refresh")

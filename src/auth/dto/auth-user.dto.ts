@@ -1,4 +1,4 @@
-export class User
+export class AuthUser
 {
     id: number;
     userName: string;

@@ -20,16 +20,16 @@ export class PageInterceptor implements NestInterceptor
 
     public async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>>
     {
-        const request = context.switchToHttp().getRequest() as Request;
-
-        const returnType = this.reflector.get("returnType", context.getHandler());
+        const returnType = this.reflector.get("ReturnType", context.getHandler());
         const repository = this.dataSource.getRepository(returnType);
 
+        const request = context.switchToHttp().getRequest() as Request;
+        const originalUrl = this.buildUrl(request);
+        
         const { page, pageSize, sortBy, sortOrder } = PageOptions.of(request);
-
+        
         const totalItems = await repository.count();
         const totalPages = Math.ceil(totalItems / pageSize);
-        const originalUrl = this.buildUrl(request); 
         
         return next.handle().pipe(map(data => (
             {

@@ -8,7 +8,7 @@ import { PageOptions } from "./page.dto";
 export function Paginated(returnType: EntityTarget<ObjectLiteral>)
 {
     return applyDecorators(
-        SetMetadata("returnType", returnType),
+        SetMetadata("ReturnType", returnType),
         UseInterceptors(PageInterceptor)
     );
 }
