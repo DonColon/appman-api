@@ -1,3 +1,4 @@
+import { ExecutionContext } from "@nestjs/common";
 import { Request } from "express";
 import { FindManyOptions } from "typeorm";
 
@@ -27,9 +28,9 @@ export class PageOptions
     }
 
 
-    public static of(request: Request): PageOptions
+    public static of(context: ExecutionContext): PageOptions
     {
-        const { query } = request;
+        const { query } = context.switchToHttp().getRequest() as Request;
 
         const page = (query.page) ? parseInt(query.page as string) : 1;
         const pageSize = (query.pageSize) ? parseInt(query.pageSize as string) : 12;
@@ -44,7 +45,7 @@ export class PageOptions
     {
         return {
             take: this.pageSize,
-            skip: this.page === 1 ? undefined : (this.page - 1) * this.pageSize,
+            skip: (this.page - 1) * this.pageSize,
             order: {
                 [this.sortBy]: this.sortOrder
             }

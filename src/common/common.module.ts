@@ -4,14 +4,14 @@ import { TraceMiddleware } from "./trace.middleware";
 
 
 @Module({
-	providers: [{ 
-		provide: "APP_FILTER", 
-		useClass: AppExceptionFilter 
+	providers: [{
+		provide: "APP_FILTER",
+		useClass: AppExceptionFilter
 	}]
 })
 export class CommonModule implements NestModule
 {
-    configure(consumer: MiddlewareConsumer)
+	configure(consumer: MiddlewareConsumer)
 	{
 		consumer.apply(TraceMiddleware).forRoutes("*");
 	}
