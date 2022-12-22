@@ -31,11 +31,11 @@ export class PageInterceptor implements NestInterceptor
         const requestUrl = this.buildUrl(context);
 
         if(page <= 0) {
-            throw new BadRequestException("Query: page should not be less equal zero");
+            throw new BadRequestException("Query: pagination begins at page 1");
         }
 
         if(pageSize <= 0) {
-            throw new BadRequestException("Query: page size should not be less equal zero");
+            throw new BadRequestException("Query: page size minimum limit is 1");
         }
 
         if(page > totalPages) {
@@ -43,7 +43,7 @@ export class PageInterceptor implements NestInterceptor
         }
 
         if(pageSize > MAX_PAGE_SIZE) {
-            throw new BadRequestException(`Query: page size limit is ${MAX_PAGE_SIZE}`);
+            throw new BadRequestException(`Query: page size maximum limit is ${MAX_PAGE_SIZE}`);
         }
         
         return next.handle().pipe(map(data => (
