@@ -15,7 +15,8 @@ export class DeveloperService
     public async create(developer: Developer): Promise<Developer>
     {
         try {
-            return await this.developerRepository.save(developer);
+            const entity = await this.developerRepository.save(developer);
+            return await this.developerRepository.findOneBy({ id: entity.id });
 
         } catch(exception) {
 

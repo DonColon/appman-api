@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 
@@ -23,6 +24,7 @@ export class Developer
     email: string;
 
     @Column()
+    @Exclude()
     password: string;
 
     @Column()
@@ -35,5 +37,6 @@ export class Developer
     createdOn: Date;
 
     @Column()
+    @Exclude()
     refreshToken: string;
 }

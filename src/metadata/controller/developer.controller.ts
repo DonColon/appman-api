@@ -15,13 +15,13 @@ export class DeveloperController
 
     @Post()
     @HttpCode(201)
-    create(@Body() body: Developer): Promise<Developer>
+    public create(@Body() body: Developer): Promise<Developer>
     {
         return this.developerService.create(body);
     }
 
     @Get(":id")
-    retrieve(@Param("id") id: number): Promise<Developer>
+    public retrieve(@Param("id") id: number): Promise<Developer>
     {
         return this.developerService.retrieve(id);
     }
@@ -29,7 +29,7 @@ export class DeveloperController
     @Put(":id")
     @HttpCode(201)
     @AccessTokenAuth()
-    update(@Param("id") id: number, @Body() body: Developer)
+    public update(@Param("id") id: number, @Body() body: Developer)
     {
         this.developerService.update(id, body);
     }
@@ -37,14 +37,14 @@ export class DeveloperController
     @Delete(":id")
     @HttpCode(204)
     @AccessTokenAuth()
-    delete(@Param("id") id: number)
+    public delete(@Param("id") id: number)
     {
         this.developerService.delete(id);
     }
 
     @Get()
     @Paginated(Developer)
-    listAll(@PageQuery() options: PageOptions): Promise<Developer[]>
+    public listAll(@PageQuery() options: PageOptions): Promise<Developer[]>
     {
         return this.developerService.listAll(options);
     }
