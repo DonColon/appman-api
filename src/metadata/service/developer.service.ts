@@ -87,6 +87,6 @@ export class DeveloperService
 
     public listAll(options: PageOptions): Promise<Developer[]>
     {
-        return this.developerRepository.find(options.toQuery());
+        return this.developerRepository.find(options.asFindManyOptions());
     }
 }

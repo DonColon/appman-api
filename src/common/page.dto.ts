@@ -41,7 +41,7 @@ export class PageOptions
         return new PageOptions({ page, pageSize, sortBy, sortOrder });
     }
 
-    public toQuery(): FindManyOptions
+    public asFindManyOptions(): FindManyOptions
     {
         return {
             take: this.pageSize,
