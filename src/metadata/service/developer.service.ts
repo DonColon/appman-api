@@ -15,8 +15,8 @@ export class DeveloperService
     public async create(developer: Developer): Promise<Developer>
     {
         try {
-            const entity = await this.developerRepository.save(developer);
-            return await this.developerRepository.findOneBy({ id: entity.id });
+            const { id } = await this.developerRepository.save(developer);
+            return await this.developerRepository.findOneBy({ id });
 
         } catch(exception) {
 
@@ -26,7 +26,7 @@ export class DeveloperService
 
     public retrieve(id: number): Promise<Developer>
     {
-        const entity = this.developerRepository.findOneBy({ id: id });
+        const entity = this.developerRepository.findOneBy({ id });
 
         if(!entity) {
             throw new NotFoundException(`Entity with ID ${id} does not exist`);
@@ -37,7 +37,7 @@ export class DeveloperService
 
     public retrieveByUserName(userName: string): Promise<Developer>
     {
-        const entity = this.developerRepository.findOneBy({ userName: userName });
+        const entity = this.developerRepository.findOneBy({ userName });
 
         if(!entity) {
             throw new NotFoundException(`Entity with user name ${userName} does not exist`);
@@ -48,7 +48,7 @@ export class DeveloperService
 
     public retrieveByEmail(email: string): Promise<Developer>
     {
-        const entity = this.developerRepository.findOneBy({ email: email });
+        const entity = this.developerRepository.findOneBy({ email });
 
         if(!entity) {
             throw new NotFoundException(`Entity with email ${email} does not exist`);
@@ -59,14 +59,14 @@ export class DeveloperService
 
     public async update(id: number, developer: DeepPartial<Developer>)
     {
-        const exists = this.developerRepository.findOneBy({ id: id });
+        const exists = this.developerRepository.findOneBy({ id });
 
         if(!exists) {
             throw new NotFoundException(`Entity with ID ${id} does not exist`);
         }
 
         try {
-            await this.developerRepository.update({ id: id }, developer);
+            await this.developerRepository.update({ id }, developer);
 
         } catch(exception) {
 
@@ -76,16 +76,16 @@ export class DeveloperService
 
     public delete(id: number)
     {
-        const exists = this.developerRepository.findOneBy({ id: id });
+        const exists = this.developerRepository.findOneBy({ id });
 
         if(!exists) {
             throw new NotFoundException(`Entity with ID ${id} does not exist`);
         }
 
-        this.developerRepository.delete({ id: id });
+        this.developerRepository.delete({ id });
     }
 
-    public listAll(options: PageOptions): Promise<Developer[]>
+    public list(options: PageOptions): Promise<Developer[]>
     {
         return this.developerRepository.find(options.asFindManyOptions());
     }
